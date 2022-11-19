@@ -2,7 +2,6 @@
 require("dotenv").config();
 
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
@@ -14,13 +13,11 @@ const app = express();
 // define http port
 const port = 3000;
 
-app.use(express.json());
-
 // adding Helmet to enhance your Rest API's security
 app.use(helmet());
 
-// using bodyParser to parse JSON bodies into JS objects
-app.use(bodyParser.json());
+// using express to parse JSON bodies into JS objects
+app.use(express.json());
 
 // enabling CORS for all requests
 app.use(cors());
