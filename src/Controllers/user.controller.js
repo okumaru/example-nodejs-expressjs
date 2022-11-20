@@ -11,7 +11,11 @@ exports.getAll = async (req, res) => {
 
 exports.getOne = async (req, res) => {
   try {
-    const data = await userModel.findById(req.params.id);
+    const id = req.params.id;
+    const data = await userModel.findById(id).then((res) => {
+      if (!res) throw new Error("Cannot find user with id " + id);
+      return res;
+    });
     res.json(data);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -42,11 +46,12 @@ exports.update = async (req, res) => {
     const updatedData = req.body;
     const options = { new: true };
 
-    const dataToUpdate = await userModel.findByIdAndUpdate(
-      id,
-      updatedData,
-      options
-    );
+    const dataToUpdate = await userModel
+      .findByIdAndUpdate(id, updatedData, options)
+      .then((res) => {
+        if (!res) throw new Error("Cannot find user with id " + id);
+        return res;
+      });
     res.status(200).json(dataToUpdate);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -56,8 +61,11 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   try {
     const id = req.params.id;
-    const data = await userModel.findByIdAndDelete(id);
-    res.send(`Document with ${data.name} has been deleted..`);
+    const data = await userModel.findByIdAndDelete(id).then((res) => {
+      if (!res) throw new Error("Cannot find user with id " + id);
+      return res;
+    });
+    res.send(`User document with ${data.fullName} has been deleted..`);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
